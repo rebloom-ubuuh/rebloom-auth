@@ -8,21 +8,38 @@
 </head>
 <body>
   <h2>REBLOOM — авторизация Threads</h2>
-  <p id="status">Проверяем результат авторизации...</p>
+  <p id="status">Проверяем авторизацию...</p>
+  <button id="copy" type="button" hidden>
+    Скопировать код авторизации
+  </button>
 
   <script>
-    const params = new URLSearchParams(window.location.search);
+    const params = new URLSearchParams(location.search);
     const status = document.getElementById("status");
+    const button = document.getElementById("copy");
+    const code = params.get("code");
 
-    if (params.has("code")) {
+    if (code) {
       status.textContent =
-        "Threads подтвердил доступ. Код авторизации получен. " +
-        "Не отправляйте адрес этой страницы другим людям.";
-      history.replaceState({}, "", window.location.pathname);
+        "Threads подтвердил доступ. Скопируйте код кнопкой ниже.";
+      button.hidden = false;
+
+      button.addEventListener("click", async () => {
+        try {
+          await navigator.clipboard.writeText(code);
+          status.textContent =
+            "Код скопирован. Сохраните его в приватном GitHub.";
+        } catch {
+          status.textContent =
+            "Не удалось скопировать код. Повторите попытку.";
+        }
+      });
+
+      history.replaceState({}, "", location.pathname);
     } else if (params.has("error")) {
       status.textContent =
-        "Threads не завершил авторизацию. Попробуйте позже.";
-      history.replaceState({}, "", window.location.pathname);
+        "Авторизация не удалась. Попробуйте ещё раз.";
+      history.replaceState({}, "", location.pathname);
     } else {
       status.textContent =
         "Страница авторизации REBLOOM готова.";
