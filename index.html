@@ -1,0 +1,32 @@
+
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>REBLOOM — Threads</title>
+</head>
+<body>
+  <h2>REBLOOM — авторизация Threads</h2>
+  <p id="status">Проверяем результат авторизации...</p>
+
+  <script>
+    const params = new URLSearchParams(window.location.search);
+    const status = document.getElementById("status");
+
+    if (params.has("code")) {
+      status.textContent =
+        "Threads подтвердил доступ. Код авторизации получен. " +
+        "Не отправляйте адрес этой страницы другим людям.";
+      history.replaceState({}, "", window.location.pathname);
+    } else if (params.has("error")) {
+      status.textContent =
+        "Threads не завершил авторизацию. Попробуйте позже.";
+      history.replaceState({}, "", window.location.pathname);
+    } else {
+      status.textContent =
+        "Страница авторизации REBLOOM готова.";
+    }
+  </script>
+</body>
+</html>
